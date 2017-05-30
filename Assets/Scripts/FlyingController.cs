@@ -16,28 +16,29 @@ public class FlyingController : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        leftConroller_Device = SteamVR_Controller.Input((int)left_trackedObj.index);
-        rightController_Device = SteamVR_Controller.Input((int)right_trackedObj.index);
         flying = false;
 	}
 	
 	// Update is called once per frame
 	void Update ()
     {
-        if(leftConroller_Device.GetPress(SteamVR_Controller.ButtonMask.Trigger) ||rightController_Device.GetPress(SteamVR_Controller.ButtonMask.Trigger))
+        leftConroller_Device = SteamVR_Controller.Input((int)left_trackedObj.index);
+        rightController_Device = SteamVR_Controller.Input((int)right_trackedObj.index);
+
+        if (leftConroller_Device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) || rightController_Device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
         {
             flying = !flying;
         }
 
-        if(flying)
+        if (flying)
         {
             leftDirection = left_trackedObj.transform.position - head.transform.position;
             rightDirection = right_trackedObj.transform.position - head.transform.position;
             direction = leftDirection + rightDirection;
             direction.Normalize();
-        }
-        
-	}
+            MovePlayer();
+            }
+    }
 
     /// <summary>
     /// Move player distance
