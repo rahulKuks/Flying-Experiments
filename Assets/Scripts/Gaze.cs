@@ -5,34 +5,40 @@ using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using Valve.VR;
 
-[RequireComponent(typeof(SteamVR_TrackedObject))]
+
 public class Gaze: MonoBehaviour
 {
 	Transform hmdTransform;
-
+    [SerializeField] SteamVR_TrackedObject hmd;
 	
 	// Use this for initialization
 	void Start () 
 	{
-		SteamVR_TrackedObject[] trackedObjects = FindObjectsOfType<SteamVR_TrackedObject>();
-		foreach (SteamVR_TrackedObject myObject in trackedObjects)
-		{
-			if (myObject.index == SteamVR_TrackedObject.EIndex.Hmd)
-			{
-				hmdTransform = myObject.transform;
-				Debug.Log (myObject.gameObject.name);
-				break;
-			}
-		}
+        hmdTransform = null;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		if (hmdTransform != null) 
-		{
-			Ray gazeRay = new Ray (hmdTransform.position, hmdTransform.forward);
-			Debug.DrawRay (hmdTransform.position, hmdTransform.forward, Color.red);
+        if(hmdTransform == null)
+        {
+            Debug.Log("hmd transform is null");
+            SteamVR_TrackedObject[] trackedObjects = FindObjectsOfType<SteamVR_TrackedObject>();
+            Debug.Log(trackedObjects.ToString());
+            foreach (SteamVR_TrackedObject myObject in trackedObjects)
+            {
+                if (myObject.index == SteamVR_TrackedObject.EIndex.Hmd)
+                {
+                    hmdTransform = myObject.transform;
+                    Debug.Log("hmd is: " + myObject.gameObject.name);
+                    break;
+                }
+            }
+        }
+		//if (hmdTransform != null) 
+		//{
+			Ray gazeRay = new Ray (hmd.transform.position, hmd.transform.forward);
+			Debug.DrawRay (hmd.transform.position, hmd.transform.forward, Color.red);
 
 			RaycastHit hit;
 			if (Physics.Raycast (gazeRay, out hit)) 
@@ -40,7 +46,7 @@ public class Gaze: MonoBehaviour
 				Debug.Log ("Raycast hit!");
 				Debug.Log("Object: " + hit.collider.gameObject.name);
 			}
-		}
+		//}
 
 		
 	}
