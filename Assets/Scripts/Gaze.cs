@@ -11,11 +11,15 @@ public class Gaze: MonoBehaviour
     [SerializeField] SteamVR_TrackedObject hmd;
 	[SerializeField] float length;
 	[SerializeField] float activationTime;
+	[SerializeField] float maxSpeed;
+	[SerializeField] float acceleration;
 
 	float timeWaited;
+	float speed=0f;
 	LineRenderer rayCastLineRenderer;
 	Renderer selectedRenderer;
 	GameObject selectedGameObject;
+	FlyingController flyingController;
 
 	bool selectionFlag, movementFlag;
 
@@ -29,6 +33,7 @@ public class Gaze: MonoBehaviour
 		timeWaited = 0;
 		selectionFlag = false;
 		movementFlag = false;
+		flyingController = GetComponent<FlyingController> ();
 	}
 	
 	// Update is called once per frame
@@ -88,6 +93,7 @@ public class Gaze: MonoBehaviour
 
 		if (movementFlag) 
 		{
+			
 		}
 		
 	}
