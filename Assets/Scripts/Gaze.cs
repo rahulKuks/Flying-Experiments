@@ -36,34 +36,42 @@ public class Gaze: MonoBehaviour
 		Debug.DrawRay (hmd.transform.position, hmd.transform.forward, Color.red);
 
 		//Set line position
-		rayCastLineRenderer.SetPosition (0, hmd.transform.position);
+		rayCastLineRenderer.SetPosition (0, hmd.transform.position + hmd.transform.forward*2);
 		rayCastLineRenderer.SetPosition (1, (hmd.transform.forward*length));
 
 
 		//Check raycast hit
 		RaycastHit hit;
-		if (Physics.Raycast (gazeRay, out hit)) 
-		{
-			if (hit.collider.gameObject.tag == "Locomotion_Anchor" && !selectionFlag) 
-			{
-				selectionFlag = true;
-			} 
-			else 
-			{
-				selectionFlag = false;
-				timeWaited = 0;
-			}
-		}
+        if (Physics.Raycast(gazeRay, out hit))
+        {
+            if (hit.collider.gameObject.tag == "Locomotion_Anchor" && !selectionFlag)
+            {
+                selectionFlag = true;
+                selectedGameObject = hit.collider.gameObject;
+                Debug.Log("Anchor found");
+            }
+            else if (hit.collider.gameObject.tag != "Locomotion_Anchor")
+            {
+                selectionFlag = false;
+                Debug.Log("Anchor lost");
+                timeWaited = 0;
+            }
+        }
+        else
+        {
+            selectionFlag = false;
+            timeWaited = 0;
+        }
 
 
 		//If anchor selected, keep track of time and chang color
 		if (selectionFlag) 
 		{
 			timeWaited += Time.deltaTime;
-
 			if (timeWaited >= activationTime) 
 			{
-				selectedRenderer = hit.collider.gameObject.GetComponent<Renderer> ();
+                Debug.Log("Activated!");
+				selectedRenderer =selectedGameObject.GetComponent<MeshRenderer> ();
 				selectedRenderer.material.color = Color.black;
 			}
 		}
