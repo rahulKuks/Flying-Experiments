@@ -13,15 +13,11 @@ public class Calibration : MonoBehaviour
 
     public Transform normal, reclined;
 
-  // Use this for initialization
-    void Start()
+    void Update() 
     {
         leftConroller_Device = SteamVR_Controller.Input((int)left_trackedObj.index);
         rightController_Device = SteamVR_Controller.Input((int)right_trackedObj.index);
-    }
 
-    void Update() 
-    {
         if (leftConroller_Device == null || rightController_Device == null)
         {
             Debug.LogError("Null controllers");
@@ -30,11 +26,19 @@ public class Calibration : MonoBehaviour
 
         if (leftConroller_Device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
         {
+            Debug.Log("Capture normal");
             normal = Camera.main.transform;
+
+            Debug.Log(normal.position);
+            Debug.Log(normal.rotation.eulerAngles);
         }
         if (rightController_Device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
         {
+            Debug.Log("Capture reclined");
             reclined = Camera.main.transform;
+
+            Debug.Log(reclined.position);
+            Debug.Log(reclined.rotation.eulerAngles);
         }
     }
 }
