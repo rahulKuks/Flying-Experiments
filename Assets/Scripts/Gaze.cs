@@ -8,46 +8,65 @@ using Valve.VR;
 
 public class Gaze: MonoBehaviour
 {
-	Transform hmdTransform;
     [SerializeField] SteamVR_TrackedObject hmd;
+	[SerializeField] float length;
+	[SerializeField] float activationTime;
+
+	float timeWaited;
+	LineRenderer rayCastLineRenderer;
+	Renderer selectedRenderer;
+	GameObject selectedGameObject;
+
+	bool selectionFlag;
+
 	
 	// Use this for initialization
 	void Start () 
 	{
-        hmdTransform = null;
+		rayCastLineRenderer = GetComponent<LineRenderer>();
+		timeWaited = 0;
+		selectionFlag = false;
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
-        if(hmdTransform == null)
-        {
-            Debug.Log("hmd transform is null");
-            SteamVR_TrackedObject[] trackedObjects = FindObjectsOfType<SteamVR_TrackedObject>();
-            Debug.Log(trackedObjects.ToString());
-            foreach (SteamVR_TrackedObject myObject in trackedObjects)
-            {
-                if (myObject.index == SteamVR_TrackedObject.EIndex.Hmd)
-                {
-                    hmdTransform = myObject.transform;
-                    Debug.Log("hmd is: " + myObject.gameObject.name);
-                    break;
-                }
-            }
-        }
-		//if (hmdTransform != null) 
-		//{
-			Ray gazeRay = new Ray (hmd.transform.position, hmd.transform.forward);
-			Debug.DrawRay (hmd.transform.position, hmd.transform.forward, Color.red);
+       
+		Ray gazeRay = new Ray (hmd.transform.position, hmd.transform.forward);
+		Debug.DrawRay (hmd.transform.position, hmd.transform.forward, Color.red);
 
-			RaycastHit hit;
-			if (Physics.Raycast (gazeRay, out hit)) 
+		//Set line position
+		rayCastLineRenderer.SetPosition (0, hmd.transform.position);
+		rayCastLineRenderer.SetPosition (1, (hmd.transform.forward*length));
+
+
+		//Check raycast hit
+		RaycastHit hit;
+		if (Physics.Raycast (gazeRay, out hit)) 
+		{
+			if (hit.collider.gameObject.tag == "Locomotion_Anchor" && !selectionFlag) 
 			{
-				Debug.Log ("Raycast hit!");
-				Debug.Log("Object: " + hit.collider.gameObject.name);
+				selectionFlag = true;
+			} 
+			else 
+			{
+				selectionFlag = false;
+				timeWaited = 0;
 			}
-		//}
+		}
 
+
+		//If anchor selected, keep track of time and chang color
+		if (selectionFlag) 
+		{
+			timeWaited += Time.deltaTime;
+
+			if (timeWaited >= activationTime) 
+			{
+				selectedRenderer = hit.collider.gameObject.GetComponent<Renderer> ();
+				selectedRenderer.material.color = Color.black;
+			}
+		}
 		
 	}
 
