@@ -17,7 +17,9 @@ public class Gaze: MonoBehaviour
 	Renderer selectedRenderer;
 	GameObject selectedGameObject;
 
-	bool selectionFlag;
+	bool selectionFlag, movementFlag;
+
+	Vector3 destinationPosition;
 
 	
 	// Use this for initialization
@@ -26,6 +28,7 @@ public class Gaze: MonoBehaviour
 		rayCastLineRenderer = GetComponent<LineRenderer>();
 		timeWaited = 0;
 		selectionFlag = false;
+		movementFlag = false;
 	}
 	
 	// Update is called once per frame
@@ -70,10 +73,21 @@ public class Gaze: MonoBehaviour
 			timeWaited += Time.deltaTime;
 			if (timeWaited >= activationTime) 
 			{
+				//break the gameObject
+				destinationPosition = selectedGameObject.transform.position;
+				selectedGameObject.GetComponent<Anchor>().BreakCube();
                 Debug.Log("Activated!");
-				selectedRenderer =selectedGameObject.GetComponent<MeshRenderer> ();
-				selectedRenderer.material.color = Color.black;
+
+				//start movement
+				movementFlag = true;
+
+				//selectedRenderer =selectedGameObject.GetComponent<MeshRenderer> ();
+				//selectedRenderer.material.color = Color.black;
 			}
+		}
+
+		if (movementFlag) 
+		{
 		}
 		
 	}
