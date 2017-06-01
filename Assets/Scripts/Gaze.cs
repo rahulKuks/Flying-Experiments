@@ -52,6 +52,7 @@ public class Gaze: MonoBehaviour
 		RaycastHit hit;
         if (Physics.Raycast(gazeRay, out hit))
         {
+			Debug.Log ("Ray hit: " + hit.collider.gameObject.name);
 			if (hit.collider.gameObject.tag == "Locomotion_Anchor" && !anchorFlag && !hit.collider.gameObject.GetComponent<Anchor>().GetActivationStatus()) 
 			{
 				anchorFlag = true;
