@@ -10,17 +10,13 @@ public class Gaze: MonoBehaviour
 {
     [SerializeField] SteamVR_TrackedObject hmd;
 	[SerializeField] float activationTime;
-	[SerializeField] float maxSpeed;
-	[SerializeField] float acceleration;
 
 	float timeWaited;
-	float speed=0f;
 	LineRenderer rayCastLineRenderer;
 	Renderer selectedRenderer;
 	Anchor selectedAnchor;
-	FlyingController flyingController;
 
-	bool anchorFlag, movementFlag;
+	bool anchorFlag;
 
 	Vector3 destinationPosition, gazeRayOrigin;
 	const float RAY_ORIGIN_OFFSET = 2f;
@@ -32,16 +28,14 @@ public class Gaze: MonoBehaviour
 		rayCastLineRenderer = GetComponent<LineRenderer>();
 		timeWaited = 0;
 		anchorFlag = false;
-		movementFlag = false;
-		flyingController = GetComponent<FlyingController> ();
 	}
 	
 	// Update is called once per frame
 	void Update () 
 	{
 		gazeRayOrigin = hmd.transform.position + hmd.transform.forward * RAY_ORIGIN_OFFSET;  
-		Ray gazeRay = new Ray (hmd.transform.position, hmd.transform.forward);
-		Debug.DrawRay (hmd.transform.position, hmd.transform.forward, Color.red);
+		Ray gazeRay = new Ray (gazeRayOrigin, hmd.transform.forward);
+		Debug.DrawRay (gazeRayOrigin, hmd.transform.forward, Color.red);
 
 		//Set line position
 		rayCastLineRenderer.SetPosition (0, gazeRayOrigin);
@@ -82,41 +76,6 @@ public class Gaze: MonoBehaviour
             anchorFlag = false;
             timeWaited = 0f;
         }
-
-
-		/*//If anchor selected, keep track of time and chang color
-		if (selectionFlag) 
-		{
-            Debug.Log("tracking time");
-			timeWaited += Time.deltaTime;
-			if (timeWaited >= activationTime) 
-			{
-				//break the gameObject
-				destinationPosition = selectedGameObject.transform.position;
-				selectedGameObject.GetComponent<Anchor>().BreakCube();
-                Debug.Log("Activated!");
-
-                //start movement
-				movementFlag = true;
-                //selectionFlag = false;
-
-				//selectedRenderer =selectedGameObject.GetComponent<MeshRenderer> ();
-				//selectedRenderer.material.color = Color.black;
-			}
-		}
-
-		if (movementFlag) 
-		{
-            flyingController.MovePlayer(destinationPosition);
-
-            if(!flyingController.IsFlying())
-            {
-                Debug.Log("Reached destination");
-                movementFlag = false;
-                flyingController.ResetSpeed();
-            }
-		}*/
-		
 	}
 
 }
