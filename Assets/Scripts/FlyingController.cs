@@ -93,6 +93,7 @@ public class FlyingController : MonoBehaviour
 	public void StartMovement(Vector3 target)
 	{
 		destination = target;
+		speed = 0f;
 		flying = true;
 	}
 
