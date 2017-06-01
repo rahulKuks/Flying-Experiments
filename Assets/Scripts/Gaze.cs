@@ -9,7 +9,6 @@ using Valve.VR;
 public class Gaze: MonoBehaviour
 {
     [SerializeField] SteamVR_TrackedObject hmd;
-	[SerializeField] float length;
 	[SerializeField] float activationTime;
 	[SerializeField] float maxSpeed;
 	[SerializeField] float acceleration;
@@ -23,8 +22,9 @@ public class Gaze: MonoBehaviour
 
 	bool anchorFlag, movementFlag;
 
-	Vector3 destinationPosition;
-
+	Vector3 destinationPosition, gazeRayOrigin;
+	const float RAY_ORIGIN_OFFSET = 2f;
+	const float LINERENDERER_LENGTH = 100f;
 	
 	// Use this for initialization
 	void Start () 
@@ -39,13 +39,13 @@ public class Gaze: MonoBehaviour
 	// Update is called once per frame
 	void Update () 
 	{
-       
+		gazeRayOrigin = hmd.transform.position + hmd.transform.forward * RAY_ORIGIN_OFFSET;  
 		Ray gazeRay = new Ray (hmd.transform.position, hmd.transform.forward);
 		Debug.DrawRay (hmd.transform.position, hmd.transform.forward, Color.red);
 
 		//Set line position
-		rayCastLineRenderer.SetPosition (0, hmd.transform.position + hmd.transform.forward*2);
-		rayCastLineRenderer.SetPosition (1, (hmd.transform.forward*length));
+		rayCastLineRenderer.SetPosition (0, gazeRayOrigin);
+		rayCastLineRenderer.SetPosition (1, (hmd.transform.forward*LINERENDERER_LENGTH));
 
 
 		//Check raycast hit
