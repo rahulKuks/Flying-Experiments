@@ -8,22 +8,22 @@ public class FlyingController : MonoBehaviour
     [SerializeField] SteamVR_TrackedObject left_trackedObj;
     [SerializeField] SteamVR_TrackedObject right_trackedObj;
     [SerializeField] float maxSpeed;
-	[SerializeField] float acceleration;
+    [SerializeField] float acceleration;
 
 
     SteamVR_Controller.Device leftConroller_Device, rightController_Device;
     Vector3 direction, leftDirection, rightDirection;
     bool flying;
-	float speed = 0f;
+    float speed = 0f;
 
     // Use this for initialization
-    void Start ()
+    void Start()
     {
         flying = false;
-	}
-	
-	// Update is called once per frame
-	/*void Update ()
+    }
+
+    // Update is called once per frame
+    /*void Update ()
     {
         leftConroller_Device = SteamVR_Controller.Input((int)left_trackedObj.index);
         rightController_Device = SteamVR_Controller.Input((int)right_trackedObj.index);
@@ -46,33 +46,41 @@ public class FlyingController : MonoBehaviour
     /// <summary>
     /// Move player distance
     /// </summary>
-	public void MovePlayer(Vector3 destination)
+    public void MovePlayer(Vector3 destination)
     {
-		if (speed < maxSpeed) {
-			speed = speed + acceleration * Time.fixedDeltaTime;
-		} 
-		else 
-		{
-			speed = speed - acceleration * Time.deltaTime;
-		}
+        flying = true;
+        if (speed < maxSpeed) {
+            speed = speed + acceleration * Time.fixedDeltaTime;
+        }
+        else
+        {
+            speed = speed - acceleration * Time.deltaTime;
+        }
 
-		direction = destination - head.transform.position;
-		direction.Normalize ();
+        direction = destination - head.transform.position;
+        direction.Normalize();
 
         Debug.Log("Moving player");
-		Vector3 nextDistanceStep = speed * Time.deltaTime * direction;
+        Vector3 nextDistanceStep = speed * Time.deltaTime * direction;
 
-		if (Vector3.Distance (destination, head.transform.position) < Vector3.Distance(head.transform.position, head.transform.position+nextDistanceStep)) 
-		{
-			nextDistanceStep = destination - head.transform.position;
-		}
+        if (Vector3.Distance(destination, head.transform.position) <= Vector3.Distance(head.transform.position, head.transform.position + nextDistanceStep))
+        {
+            Debug.Log("last increment");
+            nextDistanceStep = destination - head.transform.position;
+            flying = false;
+        }
 
 
-		transform.position = transform.position + nextDistanceStep;
+        transform.position = transform.position + nextDistanceStep;
     }
 
     public void ResetSpeed()
     {
         speed = 0f;
+    }
+
+    public bool IsFlying()
+    {
+        return flying;
     }
 }

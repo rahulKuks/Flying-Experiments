@@ -98,7 +98,7 @@ public class Gaze: MonoBehaviour
 		{
             flyingController.MovePlayer(destinationPosition);
 
-            if(transform.position == destinationPosition)
+            if(!flyingController.IsFlying())
             {
                 Debug.Log("Reached destination");
                 movementFlag = false;
