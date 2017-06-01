@@ -99,7 +99,7 @@ public class FlyingController : MonoBehaviour
     void OnTriggerEnter(Collider col)
 	{
         Debug.Log("Trigger enter - FC");
-		if (col.tag == "Locomotion_Anchor") 
+		if (col.tag == "Locomotion_Anchor" && col.gameObject.transform.position == destination) 
 		{
             Debug.Log("flying stopped");
 			flying = false;

@@ -85,7 +85,7 @@ public class Anchor : MonoBehaviour
 	void OnTriggerEnter(Collider col)
 	{
 		FlyingController fc = col.gameObject.GetComponent<FlyingController> ();
-		if (fc != null) 
+		if (fc != null && activated) 
 		{
 			activated = false;
 			anchorRenderer.material.color = originalColor;
