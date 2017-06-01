@@ -60,7 +60,15 @@ public class FlyingController : MonoBehaviour
 		direction.Normalize ();
 
         Debug.Log("Moving player");
-		transform.position = transform.position + speed * Time.deltaTime * direction;
+		Vector3 nextDistanceStep = speed * Time.deltaTime * direction;
+
+		if (Vector3.Distance (destination, head.transform.position) < Vector3.Distance(head.transform.position, head.transform.position+nextDistanceStep)) 
+		{
+			nextDistanceStep = destination - head.transform.position;
+		}
+
+
+		transform.position = transform.position + nextDistanceStep;
     }
 
     public void ResetSpeed()
