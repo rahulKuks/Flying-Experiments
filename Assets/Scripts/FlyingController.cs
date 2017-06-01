@@ -13,6 +13,7 @@ public class FlyingController : MonoBehaviour
 
     SteamVR_Controller.Device leftConroller_Device, rightController_Device;
     Vector3 direction, leftDirection, rightDirection;
+	Vector3 destination;
     bool flying;
     float speed = 0f;
 
@@ -23,9 +24,14 @@ public class FlyingController : MonoBehaviour
     }
 
     // Update is called once per frame
-    /*void Update ()
+    void Update ()
     {
-        leftConroller_Device = SteamVR_Controller.Input((int)left_trackedObj.index);
+		if (flying) 
+		{
+			MovePlayer ();
+		}
+
+		/*leftConroller_Device = SteamVR_Controller.Input((int)left_trackedObj.index);
         rightController_Device = SteamVR_Controller.Input((int)right_trackedObj.index);
 
         if (leftConroller_Device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger) || rightController_Device.GetPressDown(SteamVR_Controller.ButtonMask.Trigger))
@@ -40,15 +46,15 @@ public class FlyingController : MonoBehaviour
             direction = leftDirection + rightDirection;
             direction.Normalize();
             MovePlayer();
-            }
-    }*/
+        }*/
+    }
 
     /// <summary>
     /// Move player distance
     /// </summary>
-    public void MovePlayer(Vector3 destination)
+    public void MovePlayer()
     {
-        flying = true;
+		
         if (speed < maxSpeed) {
             speed = speed + acceleration * Time.fixedDeltaTime;
         }
@@ -57,18 +63,18 @@ public class FlyingController : MonoBehaviour
             speed = speed - acceleration * Time.deltaTime;
         }
 
-        direction = destination - head.transform.position;
+        direction = destination - transform.position;
         direction.Normalize();
 
         Debug.Log("Moving player");
         Vector3 nextDistanceStep = speed * Time.deltaTime * direction;
 
-        if (Vector3.Distance(destination, head.transform.position) <= Vector3.Distance(head.transform.position, head.transform.position + nextDistanceStep))
+        /*if (Vector3.Distance(destination, transform.position) <= Vector3.Distance(transform.position, transform.position + nextDistanceStep))
         {
             Debug.Log("last increment");
-            nextDistanceStep = destination - head.transform.position;
+            nextDistanceStep = destination - transform.position;
             flying = false;
-        }
+        }*/
 
 
         transform.position = transform.position + nextDistanceStep;
@@ -83,4 +89,20 @@ public class FlyingController : MonoBehaviour
     {
         return flying;
     }
+
+	public void StartMovement(Vector3 target)
+	{
+		destination = target;
+		flying = true;
+	}
+
+	void OnTriggerEnter(Collider col)
+	{
+		if (col.tag == "Locomotion_Anchor") 
+		{
+			flying = false;
+		}
+	}
+
+
 }

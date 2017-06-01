@@ -4,8 +4,15 @@ using UnityEngine;
 
 public class Anchor : MonoBehaviour 
 {
+	[SerializeField] Color32 activationColor;
+	[SerializeField] FlyingController flyingController;
+
+	Color32 originalColor;
+
 
 	float power = 10.0f;
+	Renderer anchorRenderer;
+	bool activated;
 
 	//8 positions
 	private Vector3[] directions =
@@ -21,8 +28,11 @@ public class Anchor : MonoBehaviour
 	};
 
 	// Use this for initialization
-	void Start () {
-		
+	void Start () 
+	{
+		anchorRenderer = GetComponent<MeshRenderer> ();
+		originalColor = anchorRenderer.material.color;
+		activated = false;
 	}
 	
 	// Update is called once per frame
@@ -55,4 +65,31 @@ public class Anchor : MonoBehaviour
 			Destroy(gameObject);
 		}
 	}
+
+	public void Activate()
+	{
+		activated = true;
+
+		//change color
+		anchorRenderer.material.color = activationColor;
+
+		//Start movement
+
+	}
+
+	public bool GetActivationStatus()
+	{
+		return activated;
+	}
+
+	void OnTriggerEnter(Collider col)
+	{
+		FlyingController fc = col.gameObject.GetComponent<FlyingController> ();
+		if (fc != null) 
+		{
+			activated = false;
+			anchorRenderer.material.color = originalColor;
+		}
+	}
+		
 }

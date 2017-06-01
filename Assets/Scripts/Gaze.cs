@@ -18,10 +18,10 @@ public class Gaze: MonoBehaviour
 	float speed=0f;
 	LineRenderer rayCastLineRenderer;
 	Renderer selectedRenderer;
-	GameObject selectedGameObject;
+	Anchor selectedAnchor;
 	FlyingController flyingController;
 
-	bool selectionFlag, movementFlag;
+	bool anchorFlag, movementFlag;
 
 	Vector3 destinationPosition;
 
@@ -31,7 +31,7 @@ public class Gaze: MonoBehaviour
 	{
 		rayCastLineRenderer = GetComponent<LineRenderer>();
 		timeWaited = 0;
-		selectionFlag = false;
+		anchorFlag = false;
 		movementFlag = false;
 		flyingController = GetComponent<FlyingController> ();
 	}
@@ -52,15 +52,24 @@ public class Gaze: MonoBehaviour
 		RaycastHit hit;
         if (Physics.Raycast(gazeRay, out hit))
         {
-            if (hit.collider.gameObject.tag == "Locomotion_Anchor" && !selectionFlag)
+			if (hit.collider.gameObject.tag == "Locomotion_Anchor" && !anchorFlag) 
+			{
+				anchorFlag = true;
+				selectedAnchor = hit.collider.gameObject.GetComponent<Anchor>();
+				timeWaited = 0;
+				Debug.Log ("Anchor found");
+			} 
+			else if (hit.collider.gameObject.tag == "Locomotion_Anchor") 
+			{
+				timeWaited += Time.deltaTime;
+				if (timeWaited >= activationTime && !selectedAnchor.GetActivationStatus()) 
+				{
+					selectedAnchor.Activate ();
+				}
+			}
+            else 
             {
-                selectionFlag = true;
-                selectedGameObject = hit.collider.gameObject;
-                Debug.Log("Anchor found");
-            }
-            else if (hit.collider.gameObject.tag != "Locomotion_Anchor")
-            {
-                selectionFlag = false;
+                anchorFlag = false;
                 Debug.Log("Anchor lost");
                 timeWaited = 0;
             }
@@ -68,12 +77,12 @@ public class Gaze: MonoBehaviour
         else
         {
             Debug.Log("Raycast failed");
-            selectionFlag = false;
+            anchorFlag = false;
             timeWaited = 0f;
         }
 
 
-		//If anchor selected, keep track of time and chang color
+		/*//If anchor selected, keep track of time and chang color
 		if (selectionFlag) 
 		{
             Debug.Log("tracking time");
@@ -104,7 +113,7 @@ public class Gaze: MonoBehaviour
                 movementFlag = false;
                 flyingController.ResetSpeed();
             }
-		}
+		}*/
 		
 	}
 
