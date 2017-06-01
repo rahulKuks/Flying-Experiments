@@ -67,14 +67,16 @@ public class Gaze: MonoBehaviour
         }
         else
         {
+            Debug.Log("Raycast failed");
             selectionFlag = false;
-            timeWaited = 0;
+            timeWaited = 0f;
         }
 
 
 		//If anchor selected, keep track of time and chang color
 		if (selectionFlag) 
 		{
+            Debug.Log("tracking time");
 			timeWaited += Time.deltaTime;
 			if (timeWaited >= activationTime) 
 			{
@@ -83,8 +85,9 @@ public class Gaze: MonoBehaviour
 				selectedGameObject.GetComponent<Anchor>().BreakCube();
                 Debug.Log("Activated!");
 
-				//start movement
+                //start movement
 				movementFlag = true;
+                //selectionFlag = false;
 
 				//selectedRenderer =selectedGameObject.GetComponent<MeshRenderer> ();
 				//selectedRenderer.material.color = Color.black;
@@ -93,7 +96,14 @@ public class Gaze: MonoBehaviour
 
 		if (movementFlag) 
 		{
-			
+            flyingController.MovePlayer(destinationPosition);
+
+            if(transform.position == destinationPosition)
+            {
+                Debug.Log("Reached destination");
+                movementFlag = false;
+                flyingController.ResetSpeed();
+            }
 		}
 		
 	}

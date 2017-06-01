@@ -46,7 +46,7 @@ public class FlyingController : MonoBehaviour
     /// <summary>
     /// Move player distance
     /// </summary>
-	private void MovePlayer(Vector3 destination)
+	public void MovePlayer(Vector3 destination)
     {
 		if (speed < maxSpeed) {
 			speed = speed + acceleration * Time.fixedDeltaTime;
@@ -59,6 +59,12 @@ public class FlyingController : MonoBehaviour
 		direction = destination - head.transform.position;
 		direction.Normalize ();
 
+        Debug.Log("Moving player");
 		transform.position = transform.position + speed * Time.deltaTime * direction;
+    }
+
+    public void ResetSpeed()
+    {
+        speed = 0f;
     }
 }
