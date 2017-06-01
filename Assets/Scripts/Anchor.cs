@@ -73,8 +73,8 @@ public class Anchor : MonoBehaviour
 		//change color
 		anchorRenderer.material.color = activationColor;
 
-		//Start movement
-
+        //Start movement
+        flyingController.StartMovement(this.transform.position);
 	}
 
 	public bool GetActivationStatus()

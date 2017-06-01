@@ -96,10 +96,12 @@ public class FlyingController : MonoBehaviour
 		flying = true;
 	}
 
-	void OnTriggerEnter(Collider col)
+    void OnTriggerEnter(Collider col)
 	{
+        Debug.Log("Trigger enter - FC");
 		if (col.tag == "Locomotion_Anchor") 
 		{
+            Debug.Log("flying stopped");
 			flying = false;
 		}
 	}

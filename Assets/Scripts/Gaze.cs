@@ -52,7 +52,7 @@ public class Gaze: MonoBehaviour
 		RaycastHit hit;
         if (Physics.Raycast(gazeRay, out hit))
         {
-			if (hit.collider.gameObject.tag == "Locomotion_Anchor" && !anchorFlag) 
+			if (hit.collider.gameObject.tag == "Locomotion_Anchor" && !anchorFlag && !hit.collider.gameObject.GetComponent<Anchor>().GetActivationStatus()) 
 			{
 				anchorFlag = true;
 				selectedAnchor = hit.collider.gameObject.GetComponent<Anchor>();
@@ -64,6 +64,7 @@ public class Gaze: MonoBehaviour
 				timeWaited += Time.deltaTime;
 				if (timeWaited >= activationTime && !selectedAnchor.GetActivationStatus()) 
 				{
+                    Debug.Log("Activating Anchor");
 					selectedAnchor.Activate ();
 				}
 			}
