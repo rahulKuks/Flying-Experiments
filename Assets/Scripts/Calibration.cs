@@ -5,40 +5,57 @@ using UnityEngine;
 public class Calibration : MonoBehaviour
 {
 
-    [SerializeField] private Camera head;
-    [SerializeField] SteamVR_TrackedObject left_trackedObj;
-    [SerializeField] SteamVR_TrackedObject right_trackedObj;
+  [SerializeField] SteamVR_TrackedObject left_trackedObj;
+  [SerializeField] SteamVR_TrackedObject right_trackedObj;
 
-    private SteamVR_Controller.Device leftConroller_Device, rightController_Device;
+  private SteamVR_Controller.Device leftConroller_Device, rightController_Device;
 
-    public Transform normal, reclined;
+  public Quaternion reclined;
+  private Quaternion normal;
+  public KeyboardController kc;
+  public TiltController tc;
 
-    void Update() 
+  void Start()
+  {
+        kc = GetComponent<KeyboardController>();
+        tc = GetComponent<TiltController>();
+  }
+
+  void Update()
+  {
+    leftConroller_Device = SteamVR_Controller.Input((int)left_trackedObj.index);
+    rightController_Device = SteamVR_Controller.Input((int)right_trackedObj.index);
+
+    if (leftConroller_Device == null || rightController_Device == null)
     {
-        leftConroller_Device = SteamVR_Controller.Input((int)left_trackedObj.index);
-        rightController_Device = SteamVR_Controller.Input((int)right_trackedObj.index);
-
-        if (leftConroller_Device == null || rightController_Device == null)
-        {
-            Debug.LogError("Null controllers");
-            return;
-        }
-
-        if (leftConroller_Device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            Debug.Log("Capture normal");
-            normal = Camera.main.transform;
-
-            Debug.Log(normal.position);
-            Debug.Log(normal.rotation.eulerAngles);
-        }
-        if (rightController_Device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
-        {
-            Debug.Log("Capture reclined");
-            reclined = Camera.main.transform;
-
-            Debug.Log(reclined.position);
-            Debug.Log(reclined.rotation.eulerAngles);
-        }
+      Debug.LogError("Null controllers");
+      return;
     }
+
+    // if (leftConroller_Device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+    if (Input.GetKeyDown(KeyCode.Alpha1))
+    {
+      Debug.Log("Capture normal");
+      normal = Camera.main.transform.rotation;
+    }
+    // if (rightController_Device.GetPressUp(SteamVR_Controller.ButtonMask.Trigger))
+    if (Input.GetKeyDown(KeyCode.Alpha2))
+    {
+      Debug.Log("Capture reclined");
+      reclined = Camera.main.transform.rotation;
+    }
+
+    if (Input.GetKeyDown(KeyCode.Alpha3))
+    {
+        Debug.Log("Finish calibrations");
+        kc.enabled = false;
+        tc.enabled = true;
+        transform.rotation = reclined;
+    }
+  }
+
+  public Quaternion getCalibratedPosition()
+  {
+      return reclined;
+  }
 }
