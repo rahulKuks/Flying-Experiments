@@ -6,6 +6,7 @@ public class TiltController : MonoBehaviour
 {
 
   public Quaternion referenceRot = Quaternion.identity;
+  public Vector3 referenceForward = Vector3.zero;
   public KeyboardController kc;
   public Calibration calibration;
 
@@ -14,7 +15,9 @@ public class TiltController : MonoBehaviour
 
   void Start()
   {
-      referenceRot = GetComponent<Calibration>().getCalibratedPosition();
+      calibration = GetComponent<Calibration>();
+      referenceRot = calibration.getCalibratedRotation();
+      referenceForward = calibration.getCalibratedForward();
       kc = GetComponent<KeyboardController>();
       kc.enabled = true;
       calibration = GetComponent<Calibration>();
@@ -23,9 +26,8 @@ public class TiltController : MonoBehaviour
 
   void Update()
   {
-      if (referenceRot != Quaternion.identity)
-      {
-          angle = Quaternion.Angle(referenceRot, transform.rotation);
-      }
+        angle = Quaternion.Angle(referenceRot, transform.rotation);
+        Vector3 cross = Vector3.Cross(referenceForward, transform.forward);
+        if (cross.z < 0) angle = -angle;
   }
 }

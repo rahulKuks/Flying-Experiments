@@ -10,7 +10,8 @@ public class Calibration : MonoBehaviour
 
   private SteamVR_Controller.Device leftConroller_Device, rightController_Device;
 
-  public Quaternion reclined;
+  public Vector3 reclinedVector;
+  public Quaternion reclinedRot;
   private Quaternion normal;
   public KeyboardController kc;
   public TiltController tc;
@@ -42,7 +43,8 @@ public class Calibration : MonoBehaviour
     if (Input.GetKeyDown(KeyCode.Alpha2))
     {
       Debug.Log("Capture reclined");
-      reclined = Camera.main.transform.rotation;
+      reclinedRot = transform.rotation;
+      reclinedVector = transform.forward;
     }
 
     if (Input.GetKeyDown(KeyCode.Alpha3))
@@ -50,12 +52,16 @@ public class Calibration : MonoBehaviour
         Debug.Log("Finish calibrations");
         kc.enabled = false;
         tc.enabled = true;
-        transform.rotation = reclined;
     }
   }
 
-  public Quaternion getCalibratedPosition()
+  public Quaternion getCalibratedRotation()
   {
-      return reclined;
+      return reclinedRot;
+  }
+
+  public Vector3 getCalibratedForward()
+  {
+      return reclinedVector;
   }
 }
