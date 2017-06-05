@@ -2,32 +2,39 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TiltController : MonoBehaviour
-{
+public class Tiltcontroller : MonoBehaviour {
 
-  public Quaternion referenceRot = Quaternion.identity;
-  public Vector3 referenceForward = Vector3.zero;
-  public KeyboardController kc;
-  public Calibration calibration;
+    public Vector3 referenceForward = Vector3.zero;
+    public Quaternion referenceRot = Quaternion.identity;
 
-  public Vector3 euler = Vector3.zero;
-  public float angle = 0f;
+    private KeyboardController kc;
+    private Calibration c;
 
-  void Start()
-  {
-      calibration = GetComponent<Calibration>();
-      referenceRot = calibration.getCalibratedRotation();
-      referenceForward = calibration.getCalibratedForward();
-      kc = GetComponent<KeyboardController>();
-      kc.enabled = true;
-      calibration = GetComponent<Calibration>();
-      calibration.enabled = false;
-  }
+    [SerializeField] private float angle = 0f;
+    [SerializeField] private float threshold = 5f;
 
-  void Update()
-  {
-        angle = Quaternion.Angle(referenceRot, transform.rotation);
-        Vector3 cross = Vector3.Cross(referenceForward, transform.forward);
+    void Start () {
+        c = GetComponent<Calibration>();
+        referenceRot = c.getCalibratedRotation();
+        referenceForward = c.getCalibratedForward();
+        c.enabled = false;
+        kc = GetComponent<KeyboardController>();
+        kc.enabled = false;
+        InvokeRepeating("PrintAngle", 2.0f, 1.0f);
+    }
+
+    void Update () {
+        angle = Quaternion.Angle(referenceRot, Camera.main.transform.rotation);
+        Vector3 cross = Vector3.Cross(referenceForward, Camera.main.transform.forward);
         if (cross.z < 0) angle = -angle;
-  }
+        if (Mathf.Abs(angle) > threshold)
+        {
+            transform.position += (angle / 10) * Time.deltaTime * Camera.main.transform.forward;
+        }
+    }
+
+    private void PrintAngle()
+    {
+        Debug.Log(angle);
+    }
 }
