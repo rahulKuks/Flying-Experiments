@@ -82,15 +82,31 @@ public class Anchor : MonoBehaviour
 		return activated;
 	}
 
-	void OnTriggerEnter(Collider col)
-	{
-		FlyingController fc = col.gameObject.GetComponent<FlyingController> ();
+    void OnTriggerStay(Collider col)
+    {
+        flyingController = col.gameObject.GetComponent<FlyingController>();
+        if(flyingController != null)
+        {
+            Debug.Log(gameObject.name + ": flyingController found");
+        }
+        if (flyingController != null && activated)
+        {
+            if (flyingController.gameObject.transform.position == this.transform.position)
+            {
+                Debug.Log(gameObject.name + " is now deactivated");
+                activated = false;
+                anchorRenderer.material.color = originalColor;
+            }
 
-		if (fc != null && activated) 
-		{
-			activated = false;
-			anchorRenderer.material.color = originalColor;
-		}
-	}
-		
+        }
+    }
+
+   
+
+   /* private void OnTriggerExit(Collider other)
+    {
+        flyingController = null;
+        Debug.Log(gameObject.name + ": flyingController detached");
+    }*/
+
 }

@@ -69,12 +69,12 @@ public class FlyingController : MonoBehaviour
         Debug.Log("Moving player");
         Vector3 nextDistanceStep = speed * Time.deltaTime * direction;
 
-        /*if (Vector3.Distance(destination, transform.position) <= Vector3.Distance(transform.position, transform.position + nextDistanceStep))
+        if (Vector3.Distance(destination, transform.position) <= Vector3.Distance(transform.position, transform.position + nextDistanceStep))
         {
             Debug.Log("last increment");
             nextDistanceStep = destination - transform.position;
             flying = false;
-        }*/
+        }
 
 
         transform.position = transform.position + nextDistanceStep;
@@ -103,7 +103,7 @@ public class FlyingController : MonoBehaviour
 		if (col.tag == "Locomotion_Anchor" && col.gameObject.transform.position == destination) 
 		{
             Debug.Log("flying stopped");
-			flying = false;
+			//flying = false;
 		}
 	}
 
