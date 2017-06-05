@@ -8,8 +8,9 @@ public class Calibration : MonoBehaviour
     [SerializeField] private Camera head;
     [SerializeField] SteamVR_TrackedObject left_trackedObj;
     [SerializeField] SteamVR_TrackedObject right_trackedObj;
+    [SerializeField] SteamVR_TrackedObject chair_trackedObj;
 
-    private SteamVR_Controller.Device leftConroller_Device, rightController_Device;
+    private SteamVR_Controller.Device leftConroller_Device, rightController_Device, chair_Tracker;
 
     public Vector3 reclinedVec = Vector3.zero;
     public Quaternion reclinedRot = Quaternion.identity;
@@ -27,6 +28,7 @@ public class Calibration : MonoBehaviour
     {
         leftConroller_Device = SteamVR_Controller.Input((int)left_trackedObj.index);
         rightController_Device = SteamVR_Controller.Input((int)right_trackedObj.index);
+        chair_Tracker = SteamVR_Controller.Input((int)chair_trackedObj.index);
 
         if (leftConroller_Device == null || rightController_Device == null)
         {
