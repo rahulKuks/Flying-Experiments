@@ -74,8 +74,14 @@ public class Anchor : MonoBehaviour
 		anchorRenderer.material.color = activationColor;
 
         //Start movement
-        flyingController.StartMovement(this.transform.position);
+        flyingController.StartMovement(this);
 	}
+
+    public void Deactivate()
+    {
+        activated = false;
+        anchorRenderer.material.color = originalColor;
+    }
 
 	public bool GetActivationStatus()
 	{
@@ -94,8 +100,7 @@ public class Anchor : MonoBehaviour
             if (flyingController.gameObject.transform.position == this.transform.position)
             {
                 Debug.Log(gameObject.name + " is now deactivated");
-                activated = false;
-                anchorRenderer.material.color = originalColor;
+                Deactivate();
             }
 
         }

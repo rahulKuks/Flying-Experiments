@@ -14,6 +14,8 @@ public class FlyingController : MonoBehaviour
     SteamVR_Controller.Device leftConroller_Device, rightController_Device;
     Vector3 direction, leftDirection, rightDirection;
 	Vector3 destination;
+    Anchor target;
+
     bool flying;
     float speed = 0f;
 
@@ -74,15 +76,11 @@ public class FlyingController : MonoBehaviour
             Debug.Log("last increment");
             nextDistanceStep = destination - transform.position;
             flying = false;
+            speed = 0f;
         }
 
 
         transform.position = transform.position + nextDistanceStep;
-    }
-
-    public void ResetSpeed()
-    {
-        speed = 0f;
     }
 
     public bool IsFlying()
@@ -90,9 +88,18 @@ public class FlyingController : MonoBehaviour
         return flying;
     }
 
-	public void StartMovement(Vector3 target)
+	public void StartMovement(Anchor targetAnchor)
 	{
-		destination = target;
+        // if we were in the middle of going to an old target, deactivate it
+        if(target != null && target.name != targetAnchor.name)
+        {
+            target.Deactivate();
+        }
+
+        //set new target as destination
+        target = targetAnchor;
+        destination = targetAnchor.transform.position ;
+
 		speed = 0f;
 		flying = true;
 	}
