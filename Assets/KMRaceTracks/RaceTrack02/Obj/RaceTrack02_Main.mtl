@@ -1,0 +1,28 @@
+# =================================== #
+# Created by Kajaman's Road Generator #
+# =================================== #
+newmtl Mat0
+illum 2
+d 1
+map_Ka Road_racinglane_dark01.png
+map_Kd Road_racinglane_dark01.png
+newmtl Mat1
+illum 2
+d 1
+map_Ka Grass01.png
+map_Kd Grass01.png
+newmtl Mat2
+illum 2
+d 1
+map_Ka Guardrails01.png
+map_Kd Guardrails01.png
+newmtl Mat3
+illum 2
+d 1
+map_Ka WideTreeLine.png
+map_Kd WideTreeLine.png
+newmtl Mat4
+illum 2
+d 1
+map_Ka MyRockLine01.png
+map_Kd MyRockLine01.png

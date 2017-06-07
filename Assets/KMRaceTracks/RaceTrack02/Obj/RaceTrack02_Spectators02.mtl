@@ -1,0 +1,8 @@
+# =================================== #
+# Created by Kajaman's Road Generator #
+# =================================== #
+newmtl Mat0
+illum 2
+d 1
+map_Ka Group02.png
+map_Kd Group02.png

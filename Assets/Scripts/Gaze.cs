@@ -9,9 +9,13 @@ using Valve.VR;
 public class Gaze: MonoBehaviour
 {
     [SerializeField] SteamVR_TrackedObject hmd;
+    [SerializeField] Camera eye;
 	[SerializeField] float activationTime;
+    [SerializeField] float rayLength;
+    [SerializeField] float rayWidth;
 
-	float timeWaited;
+
+    float timeWaited;
 	LineRenderer rayCastLineRenderer;
 	Renderer selectedRenderer;
 	Anchor selectedAnchor;
@@ -20,7 +24,6 @@ public class Gaze: MonoBehaviour
 
 	Vector3 destinationPosition, gazeRayOrigin;
 	const float RAY_ORIGIN_OFFSET = 2f;
-	const float LINERENDERER_LENGTH = 100f;
 	
 	// Use this for initialization
 	void Start () 
@@ -28,23 +31,28 @@ public class Gaze: MonoBehaviour
 		rayCastLineRenderer = GetComponent<LineRenderer>();
 		timeWaited = 0;
 		anchorFlag = false;
-	}
+
+        
+        rayCastLineRenderer.startWidth = rayWidth;
+        rayCastLineRenderer.endWidth = rayWidth;
+    }
 	
 	// Update is called once per frame
 	void Update () 
 	{
-		gazeRayOrigin = hmd.transform.position + hmd.transform.forward * RAY_ORIGIN_OFFSET;  
-		Ray gazeRay = new Ray (gazeRayOrigin, hmd.transform.forward);
+        /*gazeRayOrigin = hmd.transform.position + hmd.transform.forward * RAY_ORIGIN_OFFSET;  
+        Ray gazeRay = new Ray (gazeRayOrigin, hmd.transform.forward);
 		Debug.DrawRay (gazeRayOrigin, hmd.transform.forward, Color.red);
 
 		//Set line position
 		rayCastLineRenderer.SetPosition (0, gazeRayOrigin);
-		rayCastLineRenderer.SetPosition (1, (hmd.transform.forward*LINERENDERER_LENGTH));
+		rayCastLineRenderer.SetPosition (1, (hmd.transform.forward*rayLength));*/
 
 
 		//Check raycast hit
 		RaycastHit hit;
-        if (Physics.Raycast(gazeRay, out hit))
+        //if (Physics.Raycast(gazeRay, out hit))
+        if(ShootRay(eye.transform.position + eye.transform.forward*RAY_ORIGIN_OFFSET, out hit))
         {
 			Debug.Log ("Ray hit: " + hit.collider.gameObject.name);
 			if (hit.collider.gameObject.tag == "Locomotion_Anchor" && !anchorFlag && !hit.collider.gameObject.GetComponent<Anchor>().GetActivationStatus()) 
@@ -60,7 +68,7 @@ public class Gaze: MonoBehaviour
 				if (timeWaited >= activationTime && !selectedAnchor.GetActivationStatus()) 
 				{
                     Debug.Log("Activating Anchor");
-					selectedAnchor.Activate ();
+                    selectedAnchor.Activate(this.gameObject.GetComponent<FlyingController>());
 				}
 			}
             else 
@@ -76,6 +84,23 @@ public class Gaze: MonoBehaviour
             anchorFlag = false;
             timeWaited = 0f;
         }
+
+        
 	}
+
+    private bool ShootRay(Vector3 rayOrigin, out RaycastHit hit)
+    {
+        Ray gazeRay = new Ray(rayOrigin, hmd.transform.forward);
+
+        //Set line position
+        rayCastLineRenderer.SetPosition(0, rayOrigin);
+        rayCastLineRenderer.SetPosition(1, (eye.transform.position + eye.transform.forward * rayLength));
+
+        if(Physics.Raycast(gazeRay, out hit))
+        {
+            return true;
+        }
+        return false;
+    }
 
 }

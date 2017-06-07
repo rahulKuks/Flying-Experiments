@@ -1,0 +1,8 @@
+# =================================== #
+# Created by Kajaman's Road Generator #
+# =================================== #
+newmtl Mat0
+illum 2
+d 1
+map_Ka Cousins256.png
+map_Kd Cousins256.png

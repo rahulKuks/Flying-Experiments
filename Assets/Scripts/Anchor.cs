@@ -66,7 +66,7 @@ public class Anchor : MonoBehaviour
 		}
 	}
 
-	public void Activate()
+	public void Activate(FlyingController fc)
 	{
 		activated = true;
 
@@ -74,7 +74,7 @@ public class Anchor : MonoBehaviour
 		anchorRenderer.material.color = activationColor;
 
         //Start movement
-        flyingController.StartMovement(this);
+        fc.StartMovement(this);
 	}
 
     public void Deactivate()
